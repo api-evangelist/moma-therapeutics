@@ -1,0 +1,46 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Direct HTTP probes of the /.well-known/ surface on the one host in this profile, run 2026-08-26
+hit_count: 0
+hosts:
+- host: https://momatx.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+soft_404_control:
+  path: /.well-known/api-evangelist-soft404-control-<random>
+  status: 404
+  note: >-
+    The control returns 404, so this host is not a catch-all — the negatives above are real
+    absences rather than an SPA answering 200 for everything. Two response shapes were observed:
+    /.well-known/security.txt returns a 548-byte bare nginx 404 page, while the other paths return
+    the 28KB WordPress themed 404 page. Both carry HTTP 404, so neither is a false positive.
+finding: >-
+  MOMA Therapeutics serves no /.well-known/ discovery surface at all. No RFC 9116 security.txt,
+  no OIDC or OAuth metadata, no RFC 9727 api-catalog, no plugin manifest and no A2A agent card at
+  either the canonical or the legacy path. No WellKnown and no SecurityTxt pointer is wired into
+  apis.yml, because this file documents an absence and a pointer would assert the opposite. The
+  probe is recorded so the absence is measured rather than merely unexamined, and so a later run
+  can tell a new document from one that was never checked.
+robots:
+  url: https://momatx.com/robots.txt
+  status: 200
+  content: >-
+    User-agent: * / Disallow: /wp-admin/ / Allow: /wp-admin/admin-ajax.php /
+    Sitemap: https://momatx.com/sitemap.xml
+  note: >-
+    Nothing in robots.txt disallows /wp-json/ or /.well-known/. Every probe in this pass was
+    permitted. Note that API responses themselves carry x-robots-tag: noindex.

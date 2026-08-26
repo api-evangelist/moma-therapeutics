@@ -1,0 +1,29 @@
+generated: '2026-08-26'
+method: probed
+source: live DNS/TLS/HTTP probes of the momatx.com host on 2026-08-26
+note: >-
+  Scoped to the one host MOMA Therapeutics controls. The automated probe also resolved
+  developer.wordpress.org and www.advancedcustomfields.com because those appear as humanURL
+  values on the API entries — they are upstream specification references for the WordPress and
+  ACF REST contracts, not MOMA infrastructure, and have been removed so this artifact describes
+  only the provider's own posture.
+hosts:
+- host: momatx.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 10 13:24:53 2026 GMT
+  hsts: false
+  hsts_note: >-
+    No Strict-Transport-Security response header on the apex. HTTP requests redirect to HTTPS,
+    but without HSTS a first request is still downgradeable.
+domains:
+- domain: momatx.com
+  dnssec: false
+  caa: []
+  caa_note: No CAA record — any public CA may issue for this domain.
+  spf: true
+  dmarc: true
+  dmarc_policy: none
+  dmarc_note: >-
+    DMARC is published but the policy is p=none, which monitors without enforcing. Neither
+    quarantine nor reject is applied to unauthenticated mail claiming momatx.com.

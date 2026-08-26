@@ -1,0 +1,96 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live anonymous error responses observed against https://momatx.com/wp-json/ on 2026-08-26,
+  cross-checked against the OpenAPI documents derived in openapi/
+format: wordpress-rest-error
+format_note: >-
+  NOT RFC 9457. The API does not serve application/problem+json and emits no `type`, `title`,
+  `detail` or `instance` members. Every error is a bespoke JSON object served as
+  application/json with the HTTP status repeated inside `data.status`.
+envelope:
+  media_type: application/json
+  fields:
+  - name: code
+    type: string
+    description: Machine-readable error slug. This is the field to branch on.
+  - name: message
+    type: string
+    description: Human-readable, English-only message. Not stable across WordPress versions.
+  - name: data.status
+    type: integer
+    description: The HTTP status code, repeated in the body.
+  - name: data.params
+    type: object
+    description: Present on validation failures — maps the offending parameter to its constraint.
+  - name: data.details
+    type: object
+    description: >-
+      Present on validation failures — nests a per-parameter object carrying its own `code`
+      (e.g. rest_out_of_bounds, rest_not_in_enum) and message.
+problems:
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  description: No object exists with the requested numeric ID, or it is not published.
+  remediation: >-
+    Resolve IDs from a collection listing rather than constructing them; the ID space is shared
+    across post types, so a valid `team` ID is not a valid `posts` ID.
+  observed: GET /wp/v2/posts/99999999
+  source_operation: openapi/moma-therapeutics-posts-api-openapi.yml#getPost
+- status: 404
+  code: rest_no_route
+  title: No route found
+  description: No registered route matches the URL and HTTP method.
+  remediation: >-
+    Read the route table from GET /wp-json/ before calling. It is the authoritative list for this
+    deployment, and plugin-provided namespaces come and go with plugin updates.
+  observed: GET /wp/v2/nope
+  source_operation: openapi/moma-therapeutics-discovery-api-openapi.yml#getRouteIndex
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter
+  description: >-
+    One or more query parameters failed validation. `data.params` names each offender and
+    `data.details` carries a nested per-parameter code.
+  remediation: >-
+    The nested codes are the useful signal — rest_out_of_bounds for a numeric range violation
+    (per_page must be between 1 and 100) and rest_not_in_enum for an unlisted enum value. Both
+    constraints are declared in the derived OpenAPI parameter schemas.
+  observed: GET /wp/v2/posts?per_page=999 and GET /wp/v2/posts?orderby=bogus
+  nested_codes:
+  - rest_out_of_bounds
+  - rest_not_in_enum
+- status: 400
+  code: rest_missing_callback_param
+  title: Missing required parameter
+  description: A required parameter was omitted. `data.params` is an array of the missing names.
+  remediation: 'Supply every parameter the route index marks `required: true`.'
+  observed: GET /struck/v1/summary (missing start_date, end_date)
+- status: 401
+  code: rest_forbidden
+  title: Not permitted
+  description: >-
+    The caller lacks the capability for the route. WordPress uses 401 here rather than 403, even
+    though the request is authenticated-as-nobody rather than mis-authenticated.
+  remediation: >-
+    There is no remediation available to a third party. MOMA Therapeutics issues no credentials
+    and operates no developer program; these routes are administrative.
+  observed: GET /wp/v2/settings, GET /wp-abilities/v1/abilities
+- status: 401
+  code: rest_user_cannot_view
+  title: Cannot list users
+  description: Anonymous callers may not enumerate users.
+  observed: GET /wp/v2/users
+- status: 401
+  code: rest_cannot_view
+  title: Cannot view menu items
+  observed: GET /wp/v2/menu-items
+- status: 401
+  code: rest_cannot_view_plugins
+  title: Cannot view plugins
+  observed: GET /wp/v2/plugins
+- status: 401
+  code: rest_cannot_view_themes
+  title: Cannot view themes
+  observed: GET /wp/v2/themes

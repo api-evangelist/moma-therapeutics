@@ -1,0 +1,351 @@
+openapi: 3.1.0
+info:
+  title: MOMA Therapeutics Discovery API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind momatx.com.
+  description: The self-describing metadata surface of the momatx.com content API. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  contact:
+    name: MOMA Therapeutics
+    url: https://momatx.com/
+    email: info@momatx.com
+  x-api-evangelist-provenance: Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index published at https://momatx.com/wp-json/ (219 routes across 12 namespaces) and verified against live anonymous responses on 2026-08-26. Every parameter below appears verbatim in that index's `args` for the endpoint, every schema property name was read from a real response body, and every collection count in a description was read from the `X-WP-Total` response header on that date. MOMA Therapeutics publishes no OpenAPI, no developer portal and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The deployment is WP Engine (nginx), with Wordfence, Yoast SEO and Advanced Custom Fields registering additional namespaces. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/menu-items, /wp/v2/plugins, /wp/v2/themes and the entire wp-abilities/v1 namespace) are deliberately excluded, as are all write operations. Nothing here was obtained with credentials.
+servers:
+- url: https://momatx.com/wp-json
+  description: Production WordPress REST content API
+tags:
+- name: discovery
+  description: 'Self-describing metadata: the route index, registered post types, taxonomies and statuses.'
+paths:
+  /:
+    get:
+      tags:
+      - discovery
+      operationId: getRouteIndex
+      summary: Get the REST route index
+      description: Returns the WordPress REST API root discovery document — site name, home URL, GMT offset, the 12 registered namespaces (`wp/v2`, `oembed/1.0`, `acf/v3`, `yoast/v1`, `wordfence/v1`, `wordfence-login-security/v1`, `wpe/cache-plugin/v1`, `wpe_sign_on_plugin/v1`, `struck/v1`, `wp-site-health/v1`, `wp-block-editor/v1`, `wp-abilities/v1`) and the full 219-route table with per-endpoint methods and args. This is the only machine-readable contract MOMA Therapeutics serves, and it is the document every artifact in this repository was derived from. `authentication` is an empty array — the deployment advertises no auth scheme.
+      responses:
+        '200':
+          description: The route index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+  /wp/v2/types:
+    get:
+      tags:
+      - discovery
+      operationId: listTypes
+      summary: List registered post types
+      description: 'Lists registered post types. On this deployment: `post`, `page`, `attachment`, `nav_menu_item`, `wp_block`, `wp_template`, `wp_template_part`, `wp_navigation`, `wp_font_family`, `wp_font_face` and the MOMA-specific `team`.'
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      responses:
+        '200':
+          description: A map of post-type slug to descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/PostType'
+  /wp/v2/types/{type}:
+    get:
+      tags:
+      - discovery
+      operationId: getType
+      summary: Get a post type
+      description: Retrieves a single post-type descriptor by slug.
+      parameters:
+      - name: type
+        in: path
+        required: true
+        description: Post type slug, e.g. `team`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      responses:
+        '200':
+          description: The requested object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostType'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - discovery
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: 'Lists registered taxonomies: `category`, `post_tag` and the MOMA-specific `team_types`.'
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a specific post type.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A map of taxonomy slug to descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      tags:
+      - discovery
+      operationId: getTaxonomy
+      summary: Get a taxonomy
+      description: Retrieves a single taxonomy descriptor by slug.
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        description: Taxonomy slug, e.g. `team_types`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      responses:
+        '200':
+          description: The requested object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - discovery
+      operationId: listStatuses
+      summary: List registered post statuses
+      description: Lists post statuses visible to the caller. Anonymously this is `publish` only.
+      parameters:
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      responses:
+        '200':
+          description: A map of status slug to descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Status'
+  /wp/v2/statuses/{status}:
+    get:
+      tags:
+      - discovery
+      operationId: getStatus
+      summary: Get a post status
+      description: Retrieves a single post-status descriptor by slug.
+      parameters:
+      - name: status
+        in: path
+        required: true
+        description: Status slug, e.g. `publish`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        description: Scope under which the request is made; determines fields present in response.
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+      responses:
+        '200':
+          description: The requested object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
+          examples:
+          - rest_no_route
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: array
+              items:
+                type: string
+    PostType:
+      type: object
+      description: A registered post type descriptor.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          type:
+          - boolean
+          - string
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        icon:
+          type:
+          - string
+          - 'null'
+        _links: &id001
+          type: object
+          description: HAL-style `_links` relations WordPress emits for the object.
+          additionalProperties: true
+    RouteIndex:
+      type: object
+      description: The WordPress REST API root discovery document — site identity, registered namespaces, and the full route table with per-endpoint methods and args.
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type:
+          - number
+          - string
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          type:
+          - array
+          - object
+          description: Advertised authentication schemes. Empty on this deployment.
+        routes:
+          type: object
+          additionalProperties: true
+        _links: *id001
+    Status:
+      type: object
+      description: A registered post-status descriptor.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        public:
+          type: boolean
+        queryable:
+          type: boolean
+        date_floating:
+          type: boolean
+        _links: *id001
+    Taxonomy:
+      type: object
+      description: A registered taxonomy descriptor.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        hierarchical:
+          type: boolean
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links: *id001
+  responses:
+    NotFound:
+      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -1,0 +1,95 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live anonymous probes of https://momatx.com/wp-json/ and its route index on 2026-08-26,
+  read against the upstream WordPress REST authentication contract at
+  https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+docs: https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+summary: >-
+  MOMA Therapeutics documents no authentication because it documents no API. The WordPress REST
+  content API behind momatx.com is read-anonymous for its published-content routes and refuses
+  everything else with HTTP 401. There is no API key, no OAuth surface, no token issuance, no
+  registration and no self-service path to credentials of any kind.
+advertised_schemes: []
+advertised_schemes_note: >-
+  The route index's own `authentication` member is an empty array — the deployment advertises no
+  authentication scheme to clients. WordPress core supports cookie authentication (browser session
+  plus an X-WP-Nonce header) and Application Passwords over HTTP Basic; the Application Passwords
+  routes are registered here (/wp/v2/users/{user_id}/application-passwords) but require an
+  existing authenticated user to reach, so they are not an onboarding path for a third party.
+security_schemes: []
+security_schemes_note: >-
+  The derived OpenAPI documents in openapi/ declare no securitySchemes, and that is a faithful
+  description rather than an omission: every operation captured in them was verified to return
+  data with no credential attached.
+access:
+  anonymous_read: true
+  self_service_signup: false
+  api_keys: false
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  registration_url: null
+  registration_note: >-
+    No developer registration exists. WordPress account creation is not open on this deployment.
+anonymous_surface:
+- path: /wp/v2/posts
+  status: 200
+- path: /wp/v2/pages
+  status: 200
+- path: /wp/v2/media
+  status: 200
+- path: /wp/v2/team
+  status: 200
+- path: /wp/v2/team_types
+  status: 200
+- path: /wp/v2/categories
+  status: 200
+- path: /wp/v2/tags
+  status: 200
+- path: /wp/v2/comments
+  status: 200
+- path: /wp/v2/search
+  status: 200
+- path: /wp/v2/types
+  status: 200
+- path: /wp/v2/taxonomies
+  status: 200
+- path: /wp/v2/statuses
+  status: 200
+- path: /oembed/1.0/embed
+  status: 200
+- path: /acf/v3/options/options
+  status: 200
+gated_surface:
+- path: /wp/v2/users
+  status: 401
+  code: rest_user_cannot_view
+- path: /wp/v2/settings
+  status: 401
+  code: rest_forbidden
+- path: /wp/v2/menu-items
+  status: 401
+  code: rest_cannot_view
+- path: /wp/v2/plugins
+  status: 401
+  code: rest_cannot_view_plugins
+- path: /wp/v2/themes
+  status: 401
+  code: rest_cannot_view_themes
+- path: /wp-abilities/v1/abilities
+  status: 401
+  code: rest_forbidden
+  note: >-
+    The WordPress Abilities API namespace is registered on this deployment — the surface that
+    exposes site capabilities as invocable abilities to agents — but both /abilities and
+    /categories refuse anonymous callers. Its schemas would require authenticated introspection.
+- path: /wp-abilities/v1/categories
+  status: 401
+  code: rest_forbidden
+write_operations:
+  available_anonymously: false
+  note: >-
+    Every route in the index that declares POST, PUT, PATCH or DELETE requires an authenticated
+    user with the matching capability. No write operation is reachable without credentials, and
+    none is captured in the OpenAPI documents in this repository.

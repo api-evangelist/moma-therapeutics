@@ -1,0 +1,150 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  Derived from the OpenAPI documents in openapi/ ($ref links and id-reference fields) and from
+  the _links relations observed on live responses from https://momatx.com/wp-json/ on 2026-08-26
+summary: >-
+  The WordPress content graph as MOMA Therapeutics has configured it. Two things distinguish it
+  from a stock install and both are worth knowing before integrating: a first-class `team` custom
+  post type with 59 records, and an Advanced Custom Fields layer that carries the fields the
+  company actually curates — a news item's source and PDF link, a page's builder modules, and a
+  person's title.
+id_scheme:
+  type: integer
+  detail: >-
+    A single site-wide auto-increment ID space shared by every post type — posts, pages, media,
+    team records and blocks all draw from it. There is no per-type prefix and no UUID, so an ID
+    alone does not tell you what it points at; the `type` field or the originating collection
+    does. Term IDs live in a separate shared space across all taxonomies.
+entities:
+- name: Post
+  collection: /wp/v2/posts
+  count_at_harvest: 32
+  description: A news item — press release, media coverage, publication or conference presentation.
+  key_fields: [id, slug, date, title.rendered, content.rendered, link, categories, tags, author, featured_media]
+  custom_fields:
+  - acf.post_source
+  - acf.post_external_link
+  - acf.post_link_to_pdf
+  custom_fields_note: >-
+    These three ACF fields are how MOMA models coverage it does not host: post_source names the
+    outlet, post_external_link points off-site, post_link_to_pdf points at a poster or paper in
+    the media library. A consumer that reads only content.rendered misses most of the archive's
+    substance.
+- name: Page
+  collection: /wp/v2/pages
+  count_at_harvest: 9
+  description: A corporate page — Science, Pipeline, MOMA, Team, Join Us, News Feed, Privacy Policy, Terms.
+  key_fields: [id, slug, title.rendered, content.rendered, parent, menu_order, link, featured_media]
+  custom_fields: [acf.modules]
+  custom_fields_note: >-
+    acf.modules is a flexible-content array of page-builder blocks. It is the structured form of
+    the page; content.rendered is its HTML projection.
+- name: TeamMember
+  collection: /wp/v2/team
+  count_at_harvest: 59
+  description: >-
+    A person — leadership, board of directors, scientific advisory board or founder. A MOMA-specific
+    custom post type, not WordPress core.
+  key_fields: [id, slug, title.rendered, content.rendered, team_types, featured_media]
+  custom_fields: [acf.member_title, acf.member_video]
+- name: MediaItem
+  collection: /wp/v2/media
+  count_at_harvest: 211
+  description: >-
+    An attachment — AACR conference posters, publication PDFs, headshots, logos and site imagery.
+  key_fields: [id, slug, source_url, mime_type, media_type, filename, filesize, media_details, alt_text, post]
+- name: Term
+  collections: [/wp/v2/categories, /wp/v2/tags, /wp/v2/team_types]
+  description: A taxonomy term.
+  key_fields: [id, name, slug, taxonomy, parent, count, link]
+  instances:
+  - taxonomy: category
+    count_at_harvest: 4
+    note: Segments the news archive; observed terms include Blog and Press Release.
+  - taxonomy: post_tag
+    count_at_harvest: 0
+    note: Registered and reachable but unused.
+  - taxonomy: team_types
+    count_at_harvest: 3
+    note: MOMA-specific; observed terms include Founders.
+- name: Comment
+  collection: /wp/v2/comments
+  count_at_harvest: 0
+  description: Registered and reachable but empty.
+  key_fields: [id, post, parent, author, content.rendered, date, status]
+- name: SearchResult
+  collection: /wp/v2/search
+  count_at_harvest: 42
+  description: >-
+    A projection, not an entity — a lightweight pointer (id, title, url, type, subtype) into
+    Post, Page or TeamMember. Resolve subtype plus id against the owning collection for the
+    full object.
+  key_fields: [id, title, url, type, subtype]
+relationships:
+- from: Post
+  to: Term
+  cardinality: has_many
+  via: categories
+  detail: Post.categories is an array of `category` term IDs.
+- from: Post
+  to: Term
+  cardinality: has_many
+  via: tags
+  detail: Post.tags is an array of `post_tag` term IDs. Always empty on this deployment.
+- from: Post
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+  detail: Zero when unset. The better_featured_image field expands the same relation inline.
+- from: Post
+  to: MediaItem
+  cardinality: has_one
+  via: acf.post_link_to_pdf
+  detail: >-
+    A URL rather than an ID, so it is a soft reference — it usually resolves to a media library
+    source_url but is not enforced and can point off-site.
+- from: Page
+  to: Page
+  cardinality: belongs_to
+  via: parent
+  detail: Hierarchical; 0 means top level.
+- from: Page
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+- from: TeamMember
+  to: Term
+  cardinality: has_many
+  via: team_types
+  detail: The taxonomy that separates founders, leadership and advisors.
+- from: TeamMember
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+  detail: The person's headshot.
+- from: MediaItem
+  to: Post
+  cardinality: belongs_to
+  via: post
+  detail: The object the file was uploaded to. Null for library-level uploads.
+- from: Comment
+  to: Post
+  cardinality: belongs_to
+  via: post
+- from: Term
+  to: Term
+  cardinality: belongs_to
+  via: parent
+  detail: Only `category` and `team_types` are hierarchical.
+- from: Post
+  to: User
+  cardinality: belongs_to
+  via: author
+  detail: >-
+    The author ID is present on every post, but /wp/v2/users answers 401 anonymously, so the
+    relation is unresolvable without credentials. _embed does not resolve it either.
+traversal_note: >-
+  Every object carries a _links block with self, collection, about, author, replies,
+  wp:featuredmedia and wp:term relations. Adding ?_embed inlines the resolvable ones under
+  _embedded, which collapses the ten calls a naive integrator would otherwise make.

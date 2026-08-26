@@ -1,0 +1,56 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live probes of https://momatx.com/ and its WordPress REST route index on 2026-08-26
+summary: >-
+  There is no API lifecycle here, because there is no API program. Nothing on momatx.com states
+  a versioning policy, a deprecation policy, an SLA or a support commitment for the content API,
+  and no status page exists. The surface versions and deprecates according to whatever WordPress
+  core and the installed plugins do on the next update, with no notice to consumers.
+versioning:
+  policy_published: false
+  scheme: path-namespace
+  current: wp/v2
+  detail: >-
+    Version lives in the namespace segment. It is the upstream WordPress version, not one MOMA
+    Therapeutics controls or commits to. Plugin-provided namespaces (acf/v3, yoast/v1,
+    wordfence/v1, struck/v1, wpe/cache-plugin/v1, wp-abilities/v1) appear and disappear with
+    plugin installs and updates.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594_support: false
+  detail: >-
+    No Sunset or Deprecation response header was observed on any endpoint, and no deprecation
+    policy page exists. No operation in the derived OpenAPI documents is marked deprecated.
+  deprecated_operations: []
+status_page:
+  exists: false
+  url: null
+  detail: >-
+    No status.momatx.com, no Statuspage/Better Stack/Instatus tenant, and no uptime page linked
+    from momatx.com. The site's own theme registers a struck/v1/uptime route, but it is an
+    internal agency monitoring endpoint rather than a public status surface.
+sla:
+  published: false
+  detail: No availability, latency or support-response commitment is published for this surface.
+support:
+  developer_support: false
+  general_contact: info@momatx.com
+  detail: >-
+    General and media enquiry addresses are published in the site footer. There is no developer
+    support channel, no community forum, no issue tracker and no ticketing surface for the API.
+changelog:
+  api_changelog: false
+  detail: >-
+    No API changelog. The company maintains a dated news archive at
+    https://momatx.com/news-feed/ (32 items at harvest time, readable via /wp/v2/posts), but it
+    covers corporate and scientific milestones, not changes to this surface. No ChangeLog
+    pointer is emitted, because a corporate news feed is not an API changelog.
+observed_stability:
+  detail: >-
+    The route index is served with cache-control max-age=600 and no ETag or Last-Modified, so a
+    consumer cannot detect a contract change cheaply — every check re-transfers the full 240KB
+    document. That, plus the absence of any deprecation signal, is the material lifecycle risk
+    for anyone integrating against this surface.

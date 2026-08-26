@@ -1,0 +1,19 @@
+generated: '2026-08-26'
+method: searched
+source: https://momatx.com/
+plan_count: 0
+plans: []
+note: >-
+  MOMA Therapeutics sells no API and publishes no pricing of any kind. It is a private
+  clinical-stage biotechnology company whose revenue comes from partnership economics — a
+  reported $66 million upfront plus milestones from the Roche discovery collaboration announced
+  January 2024, and a collaboration and licence agreement with Bayer signed October 2024 — not
+  from a product catalogue. There is no pricing page, no plans page, no billing surface and no
+  "contact sales" API tier on momatx.com; the nav is Science, Pipeline, MOMA, Team, News &
+  Publications and Join Us. The WordPress content API catalogued in this repository is a
+  by-product of the corporate website, offered under no commercial terms at all. plan_count: 0
+  is the accurate measurement, not a gap in the search.
+evidence:
+- url: https://momatx.com/
+  status: 200
+  finding: No pricing, plans, developers or products entry in the primary navigation or footer.

@@ -1,0 +1,83 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Derived from the OpenAPI documents in openapi/ and verified against live anonymous responses
+  from https://momatx.com/wp-json/ on 2026-08-26
+summary: >-
+  A read-only WordPress content API. It conforms to a small set of generic web standards it
+  inherits from WordPress core and its host, and to none of the API-industry security or
+  interoperability standards. MOMA Therapeutics makes no published compliance or certification
+  claim anywhere on momatx.com.
+standards:
+- id: rfc8288-web-linking
+  conforms: true
+  evidence: >-
+    Collection responses carry a Link header with rel="next"/rel="prev"; the route index and
+    OPTIONS responses carry rel="https://api.w.org/". Observed verbatim on
+    GET /wp/v2/posts?per_page=2.
+- id: rfc6415-oembed
+  conforms: true
+  evidence: >-
+    /oembed/1.0/embed returns a conformant oEmbed 1.0 rich response (version, type, provider_name,
+    provider_url, html, thumbnail_*). Verified against https://momatx.com/science/.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors are served as application/json with a bespoke {code, message, data.status} envelope.
+    No application/problem+json media type and none of the RFC 9457 members are present.
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme in any derived spec; the route index advertises no authentication.
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration — probed 2026-08-26, HTTP 404.
+- id: openapi
+  conforms: false
+  evidence: >-
+    MOMA Therapeutics publishes no OpenAPI. The documents in openapi/ are API Evangelist
+    derivations of the live WordPress route index, not provider artifacts.
+- id: json-api
+  conforms: false
+  evidence: Responses are plain JSON arrays/objects; no JSON:API document structure or media type.
+- id: pagination
+  conforms: true
+  evidence: >-
+    page/per_page with X-WP-Total and X-WP-TotalPages, exposed cross-origin via
+    Access-Control-Expose-Headers.
+- id: idempotency
+  conforms: na
+  evidence: Read-only surface — no write operations reachable, so no idempotency contract applies.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: https://momatx.com/.well-known/security.txt probed 2026-08-26, HTTP 404.
+- id: rfc8615-well-known
+  conforms: false
+  evidence: >-
+    Every /.well-known/ path probed on 2026-08-26 returned 404 — security.txt,
+    openid-configuration, oauth-authorization-server, api-catalog, ai-plugin.json,
+    agent-card.json and agent.json.
+- id: cors
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Headers and Access-Control-Expose-Headers are returned, and OPTIONS on
+    a collection answers 200 with an Allow header.
+domain_standards:
+  applicable: false
+  sector: biotechnology / pharmaceutical drug discovery
+  detail: >-
+    No domain standard applies to this contract and none is claimed. The sector's machine-readable
+    standards — HL7 FHIR, CDISC SDTM/ODM, ISO IDMP, CDISC Define-XML — govern clinical data
+    exchange, regulatory submission and health records. MOMA Therapeutics operates in preclinical
+    and Phase 1 oncology discovery and exchanges that data bilaterally with partners such as Roche
+    and Bayer, not over a public API. The only public contract is the WordPress content API behind
+    its corporate website, which is not a clinical or regulatory data surface. Recorded as
+    not-applicable rather than non-conformant: this is a reward-only dimension and inventing a
+    conformance to fill it would be fabrication.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  evidence: >-
+    No trust centre, no SOC 2 / ISO 27001 / HIPAA / GDPR certification page and no compliance
+    statement was found on momatx.com. probe-security-programs.py returned vdp=none trust=none on
+    2026-08-26. No Compliance pointer is emitted, because there is no published program to point at.

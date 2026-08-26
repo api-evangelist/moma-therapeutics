@@ -1,4 +1,4 @@
-# MoMa Therapeutics
+# MOMA Therapeutics
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,5 +64,57 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-MoMa Therapeutics is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/moma-therapeutics_stock/
+MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company founded in 2020 that builds
+precision medicines against **molecular machines** — the highly dynamic proteins that convert chemical
+energy stored in cells into regulatory work such as protein transport, DNA repair and degradation, and
+whose constant conformational shape-shifting has historically made them undruggable. Its proprietary
+**KNOMATIC** platform pairs structural and functional-genomics target validation with high-throughput
+fragment and DNA-encoded-library screening, CRISPR gene editing, AI for detecting dynamic conformational
+patterns, and machine-learning lead optimisation.
+
+The company launched in April 2020 with an $86M Series A led by Third Rock Ventures, added a $150M
+Series B in May 2022, and has two wholly owned oncology assets in the clinic — **MOMA-313**, a selective
+polymerase theta (Polθ) helicase inhibitor that entered Phase 1 in August 2024, and **MOMA-341**, a WRN
+helicase inhibitor that dosed its first Phase 1 patient in July 2025. It runs a five-year discovery
+collaboration with Roche (January 2024) and a collaboration and licence agreement with Bayer (October 2024).
+
+- Website: https://momatx.com/
+- Science: https://momatx.com/science/ · Pipeline: https://momatx.com/pipeline/ · Team: https://momatx.com/team/
+- News & Publications: https://momatx.com/news-feed/
+
+## API surface
+
+**MOMA Therapeutics runs no developer program.** There is no product API, no developer portal, no API
+reference, no SDK in any registry, no CLI, no sandbox, no pricing, no webhooks, no GraphQL, no gRPC or
+WSDL, no MCP server, no A2A agent card and no `/.well-known/` surface of any kind. Every one of those was
+probed on 2026-08-26 and the absences are recorded in the artifacts rather than merely assumed.
+
+What *is* published, and what this profile catalogues, is the **read-only WordPress REST content API**
+behind `momatx.com` — a real, anonymously reachable, machine-readable surface the company serves at
+`https://momatx.com/wp-json/`. Its 219-route index across 12 namespaces is the only machine-readable
+contract MOMA Therapeutics publishes, and every OpenAPI document in `openapi/` is an API Evangelist
+derivation of it, verified against live anonymous responses.
+
+Two things distinguish it from a stock WordPress install:
+
+- a first-class **`team` custom post type** carrying 59 people — leadership, board, scientific advisory
+  board and founders — classified by a MOMA-specific `team_types` taxonomy, and
+- an **Advanced Custom Fields** layer carrying the fields the company actually curates: a news item's
+  source, external link and PDF link; a page's builder modules; a person's title.
+
+| Collection | Count at harvest |
+|---|---|
+| News posts (`/wp/v2/posts`) | 32 |
+| Team records (`/wp/v2/team`) | 59 |
+| Media attachments (`/wp/v2/media`) | 211 |
+| Corporate pages (`/wp/v2/pages`) | 9 |
+| Search results, unfiltered (`/wp/v2/search`) | 42 |
+| Categories / team_types / tags / comments | 4 / 3 / 0 / 0 |
+
+Administrative routes — `/wp/v2/users`, `/wp/v2/settings`, `/wp/v2/menu-items`, `/wp/v2/plugins`,
+`/wp/v2/themes` and the whole `wp-abilities/v1` namespace — answer HTTP 401 anonymously and are
+deliberately excluded, as is every write operation. Nothing in this repository was obtained with
+credentials.
+
+Start with [`llms/moma-therapeutics-llms.txt`](llms/moma-therapeutics-llms.txt) for the agent-facing
+summary, or [`skills/`](skills/) for three packaged workflows over the surface.

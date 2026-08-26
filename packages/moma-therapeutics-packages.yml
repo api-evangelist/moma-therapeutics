@@ -1,0 +1,58 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  Registry searches on 2026-08-26 across npm (registry.npmjs.org), PyPI, RubyGems, crates.io and
+  the GitHub API, plus a read of every page linked from https://momatx.com/
+package_count: 0
+official_package_count: 0
+packages: []
+note: >-
+  MOMA Therapeutics ships no client library in any language. There is nothing to record a version
+  or a publish date against, so no entry carries version: null — there is no entry. This is an
+  expected zero: the company publishes no API, so there is no API to wrap.
+registries_searched:
+- registry: npm
+  query: momatx
+  results: 0
+  status: 200
+- registry: npm
+  query: moma-therapeutics
+  results: 14
+  status: 200
+  finding: >-
+    All fourteen are unrelated third-party packages (iobroker.moma, navio, dial-a-poem,
+    nodebb-plugin-sso-patreon and similar). None is published by or references MOMA Therapeutics.
+- registry: npm
+  query: 'direct lookups: momatx, knomatic, @momatx/sdk'
+  results: 0
+  status: 404
+- registry: pypi
+  query: 'momatx, moma-therapeutics, knomatic'
+  results: 0
+  status: 404
+- registry: rubygems
+  query: momatx
+  results: 0
+  status: 404
+- registry: crates.io
+  query: momatx
+  results: 0
+  status: 404
+source_code:
+  github_org: https://github.com/momatx
+  github_org_status: 200
+  github_org_name: MOMA Therapeutics
+  github_org_created: '2020-10-19'
+  public_repos: 0
+  finding: >-
+    A GitHub organisation named "MOMA Therapeutics" exists at github.com/momatx and was created in
+    October 2020, six months after the company launched. It has zero public repositories and no
+    blog, email or location set on the profile, so ownership cannot be confirmed beyond an exact
+    name match and a plausible date. No GitHubOrganization pointer is wired into apis.yml: an
+    empty organisation whose ownership rests on a name match is not a developer surface, and
+    pointing at it would credit MOMA Therapeutics with a public code presence it does not have.
+consuming_this_api:
+  detail: >-
+    A caller who wants to consume the WordPress content API catalogued here uses a generic
+    WordPress REST client rather than anything MOMA publishes. The derived OpenAPI documents in
+    openapi/ are sufficient to generate one.

@@ -1,0 +1,80 @@
+generated: '2026-08-26'
+method: derived
+status: candidate
+source: >-
+  Derived from the operations in openapi/, which were themselves derived from the live WordPress
+  REST route index at https://momatx.com/wp-json/ on 2026-08-26
+deployment:
+  mode: none
+  auth: none
+  verified: derived
+  note: >-
+    MOMA Therapeutics ships no MCP server — no hosted endpoint, no stdio package, no listing in
+    any MCP registry, and no mention of MCP anywhere on momatx.com. mode: none is a measurement,
+    not a placeholder. No endpoint or install command is recorded because none exists, and no
+    MCPServer pointer is wired into apis.yml: the tools below are a proposal API Evangelist
+    derived from the provider's own contract, not a surface an agent can reach today.
+search:
+  npm_modelcontextprotocol: not found
+  docs_mention_mcp: false
+  registry_listings: []
+  note: >-
+    The deployment does register the WordPress Abilities API namespace (wp-abilities/v1), which is
+    the upstream surface that exposes site capabilities to agents and is the nearest thing here to
+    an MCP tool list. Both of its routes returned 401 rest_forbidden anonymously on 2026-08-26, so
+    its ability schemas would require authenticated introspection and none is reproduced here.
+server:
+  name: moma-therapeutics
+  transport: http
+  url: null
+tools:
+- name: list_news_posts
+  description: >-
+    List MOMA Therapeutics news items — press releases, media coverage, publications and
+    conference presentations. Supports search, date bounds and category filtering.
+  source_operation: openapi/moma-therapeutics-posts-api-openapi.yml#listPosts
+- name: get_news_post
+  description: Retrieve one news item by ID, including its source, external link and PDF link.
+  source_operation: openapi/moma-therapeutics-posts-api-openapi.yml#getPost
+- name: list_team_members
+  description: >-
+    List MOMA Therapeutics people — leadership, board, scientific advisory board and founders —
+    filterable by team_types.
+  source_operation: openapi/moma-therapeutics-team-api-openapi.yml#listTeamMembers
+- name: get_team_member
+  description: Retrieve one person by ID, including biography and role.
+  source_operation: openapi/moma-therapeutics-team-api-openapi.yml#getTeamMember
+- name: list_pages
+  description: List corporate pages — Science, Pipeline, MOMA, Team, Join Us.
+  source_operation: openapi/moma-therapeutics-pages-api-openapi.yml#listPages
+- name: get_page
+  description: Retrieve one corporate page by ID, including rendered content.
+  source_operation: openapi/moma-therapeutics-pages-api-openapi.yml#getPage
+- name: search_content
+  description: >-
+    Search across every published object and return lightweight hits with type and subtype for
+    resolution.
+  source_operation: openapi/moma-therapeutics-search-api-openapi.yml#search
+- name: list_media
+  description: >-
+    List media library attachments — conference posters and publication PDFs alongside site
+    imagery — with direct source_url for retrieval.
+  source_operation: openapi/moma-therapeutics-media-api-openapi.yml#listMedia
+- name: get_media_item
+  description: Retrieve one attachment by ID with its direct file URL and mime type.
+  source_operation: openapi/moma-therapeutics-media-api-openapi.yml#getMediaItem
+- name: list_categories
+  description: List the news categories that segment the archive.
+  source_operation: openapi/moma-therapeutics-taxonomy-api-openapi.yml#listCategories
+- name: list_team_types
+  description: List the team_types terms that classify people.
+  source_operation: openapi/moma-therapeutics-taxonomy-api-openapi.yml#listTeamTypes
+- name: get_route_index
+  description: >-
+    Fetch the WordPress REST route index — the provider's only self-published machine-readable
+    contract.
+  source_operation: openapi/moma-therapeutics-discovery-api-openapi.yml#getRouteIndex
+tool_count: 12
+input_schemas: >-
+  Every tool above inherits a real inputSchema from its backing operation's parameters in the
+  OpenAPI documents in openapi/. Nothing was guessed.

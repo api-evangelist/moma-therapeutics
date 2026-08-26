@@ -1,0 +1,36 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Response headers observed on live anonymous requests to https://momatx.com/wp-json/ on
+  2026-08-26
+limit_count: 0
+limits: []
+note: >-
+  No published rate limits and no runtime rate-limit signal. MOMA Therapeutics documents no API,
+  so there is no limits page to read, and no observed response carried an X-RateLimit-*,
+  RateLimit-* or Retry-After header. The WP Engine cache plugin registers a
+  /wpe/cache-plugin/v1/rate_limit_status route in some builds, but on this deployment it returns
+  404 rest_no_route. An honest zero: unmetered and unsignalled, not generous. Any protection that
+  exists is enforced at the WP Engine edge and is invisible to a caller until it fires.
+response_headers:
+  rate_limit_headers: []
+  exhaustion_status: null
+  exhaustion_note: >-
+    Not observed. No request in this pass was refused for volume, and the pipeline does not probe
+    for a limit by exhausting one.
+observed_headers:
+- name: cache-control
+  value: max-age=600, must-revalidate
+  note: >-
+    The only throttling-adjacent signal on the surface. A ten-minute edge TTL means a polling
+    consumer is served from cache rather than origin, which is what stands in for a rate limit here.
+- name: x-cacheable
+  value: SHORT
+- name: x-cache
+  value: MISS or HIT
+- name: x-powered-by
+  value: WP Engine
+guidance: >-
+  Treat the surface as best-effort and unguaranteed. Cache locally against the ten-minute TTL,
+  back off on any 5xx, and do not build a poller that assumes headroom — there is no header that
+  will tell you when you are close to a limit, and no documented ceiling to stay under.

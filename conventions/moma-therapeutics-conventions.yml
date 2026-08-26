@@ -1,0 +1,116 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live anonymous requests and response headers observed against https://momatx.com/wp-json/ on
+  2026-08-26, plus the route index's declared args
+docs: https://developer.wordpress.org/rest-api/
+summary: >-
+  MOMA Therapeutics publishes no API conventions of its own. Everything below is the upstream
+  WordPress REST contract as it is actually deployed on momatx.com, verified by observation
+  rather than assumed from the WordPress handbook.
+authentication:
+  style: none
+  detail: >-
+    Published-content routes are read-anonymous. Everything else answers 401. See
+    authentication/moma-therapeutics-authentication.yml.
+versioning:
+  style: path-namespace
+  detail: >-
+    The version lives in the namespace segment — /wp/v2, /oembed/1.0, /acf/v3. There is no
+    Accept-header or query-parameter version negotiation, and no deprecation signalling.
+  current: wp/v2
+  namespaces_registered: 12
+pagination:
+  style: page-and-size
+  params:
+  - name: page
+    default: 1
+    minimum: 1
+  - name: per_page
+    default: 10
+    minimum: 1
+    maximum: 100
+  - name: offset
+    note: Alternative cursor-free skip, mutually usable with per_page.
+  response_headers:
+  - name: X-WP-Total
+    description: Total matching items. Observed value 32 on /wp/v2/posts.
+  - name: X-WP-TotalPages
+    description: Total pages at the current per_page. Observed value 16 at per_page=2.
+  - name: Link
+    description: >-
+      RFC 8288 links with rel="next" / rel="prev". Observed verbatim on /wp/v2/posts?per_page=2.
+  exposed_via: >-
+    Access-Control-Expose-Headers: X-WP-Total, X-WP-TotalPages, Link — so a browser client can
+    read them cross-origin.
+filtering:
+  detail: >-
+    Every collection accepts search, include, exclude, slug, order, orderby, and the post-like
+    collections additionally accept after/before and modified_after/modified_before as ISO 8601
+    date-time bounds. Taxonomy filters are per-collection: categories/tags on /wp/v2/posts and
+    team_types on /wp/v2/team.
+field_selection:
+  supported: true
+  param: _fields
+  detail: >-
+    A comma-separated projection, e.g. ?_fields=id,title,link. Verified working against
+    /wp/v2/posts on 2026-08-26. This is the closest thing the surface has to sparse fieldsets;
+    there is no expansion parameter.
+  embedding:
+    param: _embed
+    detail: >-
+      Inlines linked resources (author, featured media, terms) under _embedded, driven by the
+      _links relations each object carries.
+context:
+  param: context
+  values: [view, embed, edit]
+  default: view
+  detail: >-
+    `edit` requires capabilities this deployment refuses anonymously, so an unauthenticated
+    caller has view and embed only.
+error_envelope:
+  format: wordpress-rest-error
+  detail: >-
+    Bespoke {code, message, data:{status}} JSON, not RFC 9457. Branch on `code`, never on
+    `message`. Full catalogue in errors/moma-therapeutics-problem-types.yml.
+rate_limit_signaling:
+  headers: []
+  detail: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After on any observed response, and the WP Engine
+    cache plugin's rate_limit_status route is not registered on this deployment (404). An agent
+    has no runtime budget signal here. See rate-limits/moma-therapeutics-rate-limits.yml.
+caching:
+  headers:
+    cache-control: max-age=600, must-revalidate
+    x-cacheable: SHORT
+    x-cache: MISS/HIT
+  detail: >-
+    WP Engine edge caching, ten-minute TTL on API responses. No ETag and no Last-Modified were
+    observed, so conditional requests are not available — a poller re-transfers the full body.
+  robots: >-
+    Responses carry x-robots-tag: noindex, so the API surface is explicitly excluded from search
+    indexing even though it is anonymously readable.
+request_id_tracing:
+  supported: false
+  detail: No correlation or request-id header is returned. There is nothing to quote in a support ticket.
+idempotency:
+  supported: na
+  detail: >-
+    Not applicable. Every operation catalogued in this repository is a GET, which is idempotent
+    by HTTP definition. There is no Idempotency-Key header, no idempotent-retry contract and no
+    documented replay window, because there is no anonymously reachable write surface to protect.
+  na_reason: read-only-surface
+dry_run_mode:
+  supported: na
+  na_reason: read-only-surface
+  detail: No write operations exist for a caller to rehearse.
+reversibility:
+  grade: na
+  na_reason: read-only-surface
+  detail: >-
+    There is nothing to reverse. Every operation reachable without credentials is a safe GET;
+    no create, update, delete, cancel, refund, void or restore path is available to a third
+    party, so no reversal operation and no reversal window can exist. This is an honest `na`
+    rather than a zero: the dimension does not apply to a read-only content API.
+  write_surfaces: []
+  reversal_operations: []
