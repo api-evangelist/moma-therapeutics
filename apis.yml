@@ -20,6 +20,18 @@ description: >-
   MOMA Therapeutics runs no developer program and publishes no product API, developer portal, API
   reference or machine-readable specification. The only machine-readable surface reachable without
   credentials is the WordPress REST content API behind momatx.com, catalogued here.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://momatx.com/wp-content/uploads/2025/03/logo-moma.png
 url: https://raw.githubusercontent.com/api-evangelist/moma-therapeutics/refs/heads/main/apis.yml
 x-type: company
