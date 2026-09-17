@@ -81,8 +81,8 @@ apis:
 - aid: moma-therapeutics:moma-therapeutics-posts-api
   name: MOMA Therapeutics Content Posts API
   description: >-
-    News archive — company press releases, media coverage, peer-reviewed publications and conference
-    presentations (32 published at harvest time, spanning April 2020 through August 2026).
+    News archive — company press releases, media coverage, peer-reviewed publications and conference presentations
+    (32 published at harvest time, spanning April 2020 through August 2026).
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -105,9 +105,9 @@ apis:
 - aid: moma-therapeutics:moma-therapeutics-pages-api
   name: MOMA Therapeutics Content Pages API
   description: >-
-    Corporate pages — Science, Pipeline, MOMA, Team, Join Us, News Feed, Privacy Policy and Terms
-    (9 published at harvest time). The acf.modules flexible-content array carries the page-builder
-    blocks that compose each page.
+    Corporate pages — Science, Pipeline, MOMA, Team, Join Us, News Feed, Privacy Policy and Terms (9 published
+    at harvest time). The acf.modules flexible-content array carries the page-builder blocks that compose
+    each page.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -131,8 +131,8 @@ apis:
   name: MOMA Therapeutics Team API
   description: >-
     The team custom post type — leadership, board of directors, scientific advisory board and founders
-    (59 published records at harvest time), classified by the MOMA-specific team_types taxonomy and
-    carrying each person's role in acf.member_title.
+    (59 published records at harvest time), classified by the MOMA-specific team_types taxonomy and carrying
+    each person's role in acf.member_title.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -155,8 +155,8 @@ apis:
 - aid: moma-therapeutics:moma-therapeutics-media-api
   name: MOMA Therapeutics Media API
   description: >-
-    Media library — AACR conference posters, publication PDFs, headshots, logos and site imagery
-    (211 attachments at harvest time).
+    Media library — AACR conference posters, publication PDFs, headshots, logos and site imagery (211
+    attachments at harvest time).
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -180,8 +180,7 @@ apis:
   name: MOMA Therapeutics Taxonomy API
   description: >-
     Term collections for the three registered taxonomies — category (4 terms including Blog and Press
-    Release), post_tag (registered but empty) and the MOMA-specific team_types (3 terms including
-    Founders).
+    Release), post_tag (registered but empty) and the MOMA-specific team_types (3 terms including Founders).
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -204,8 +203,8 @@ apis:
 - aid: moma-therapeutics:moma-therapeutics-discovery-api
   name: MOMA Therapeutics Discovery API
   description: >-
-    Self-describing metadata — the 219-route index across 12 namespaces, plus registered post types,
-    taxonomies and statuses. This is the only machine-readable contract the company serves.
+    Self-describing metadata — the 219-route index across 12 namespaces, plus registered post types, taxonomies
+    and statuses. This is the only machine-readable contract the company serves.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -228,8 +227,8 @@ apis:
 - aid: moma-therapeutics:moma-therapeutics-search-api
   name: MOMA Therapeutics Search API
   description: >-
-    Cross-content search over every published object — posts, pages and team records. An unfiltered
-    query returned 42 results at harvest time.
+    Cross-content search over every published object — posts, pages and team records. An unfiltered query
+    returned 42 results at harvest time.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -273,34 +272,12 @@ apis:
     url: conventions/moma-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/moma-therapeutics-data-model.yml
-- aid: moma-therapeutics:moma-therapeutics-oembed-api
-  name: MOMA Therapeutics oEmbed API
-  description: oEmbed 1.0 provider endpoint for momatx.com URLs, returning rich embeddable responses.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://momatx.com/wp-json
-  tags:
-  - oEmbed
-  tags_raw:
-  - oembed
-  properties:
-  - type: OpenAPI
-    url: openapi/moma-therapeutics-oembed-api-openapi.yml
-  - type: Overlay
-    url: overlays/moma-therapeutics-oembed-api-overlay.yaml
-  - type: Authentication
-    url: authentication/moma-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/moma-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/moma-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/moma-therapeutics-data-model.yml
 - aid: moma-therapeutics:moma-therapeutics-options-api
   name: MOMA Therapeutics Site Options API
   description: >-
-    Advanced Custom Fields options-page payload, anonymously readable at /acf/v3/options/options. It
-    carries site-wide configuration — logo, footer contact block, social profile URLs, copyright line
-    and visual-identity settings — with no field-level access control.
+    Advanced Custom Fields options-page payload, anonymously readable at /acf/v3/options/options. It carries
+    site-wide configuration — logo, footer contact block, social profile URLs, copyright line and visual-identity
+    settings — with no field-level access control.
   humanURL: https://www.advancedcustomfields.com/resources/rest-api/
   baseURL: https://momatx.com/wp-json
   tags:
@@ -320,12 +297,32 @@ apis:
     url: conventions/moma-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/moma-therapeutics-data-model.yml
+- aid: moma-therapeutics:moma-therapeutics-o-embed-api
+  name: MOMA Therapeutics o Embed API
+  description: oEmbed 1.0 provider endpoint for momatx.com URLs.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://momatx.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/moma-therapeutics-o-embed-api-openapi.yml
+  - type: Authentication
+    url: authentication/moma-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/moma-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/moma-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/moma-therapeutics-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/moma-therapeutics-oembed-api-overlay.yaml
 - type: Website
   url: https://momatx.com/
 - type: About
