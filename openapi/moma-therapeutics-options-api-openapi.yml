@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: MOMA Therapeutics Site Options API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind momatx.com.
-  description: The site-configuration surface exposed by the Advanced Custom Fields REST namespace. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  description: The site-configuration surface exposed by the Advanced Custom Fields REST namespace.
   contact:
     name: MOMA Therapeutics
     url: https://momatx.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://momatx.com/wp-json
   description: Production WordPress REST content API
 tags:
-- name: options
+- name: Options
   description: Advanced Custom Fields options-page payloads, exposed anonymously by the `acf/v3` namespace.
 paths:
   /acf/v3/options/{option_name}:
     get:
       tags:
-      - options
+      - Options
       operationId: getOptionsPage
       summary: Get an ACF options page
       description: 'Returns an Advanced Custom Fields options-page payload. The `options` page is anonymously readable on this deployment and carries site-wide configuration: the company logo attachment, the rendered footer contact block (general and media email addresses, the Cambridge, MA head office address), social profile URLs, the copyright line, visual-identity settings and a news-modal configuration. Verified live on 2026-08-26. Note that this route also returns internal site-build contact records; the ACF plugin exposes the whole field group with no field-level access control, which is a configuration choice rather than a documented API.'
@@ -40,7 +40,22 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    OptionsPayload:
+      type: object
+      description: 'An Advanced Custom Fields options-page payload. On this deployment the `options` page carries site-wide configuration: logo, footer contact block, social profile URLs, copyright line, visual-identity settings and a news-modal configuration.'
+      properties:
+        acf:
+          type: object
+          description: 'The field group. Observed keys on 2026-08-26: blog_modal_post, company_logo, contact_information, export_settings, footer_contact, footer_copyright, link_to_news_page, modal_show_on_load, social_instagram, social_linkedin, social_twitter, social_youtube, visual_identity.'
+          additionalProperties: true
     Error:
       type: object
       description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
@@ -67,18 +82,3 @@ components:
               type: array
               items:
                 type: string
-    OptionsPayload:
-      type: object
-      description: 'An Advanced Custom Fields options-page payload. On this deployment the `options` page carries site-wide configuration: logo, footer contact block, social profile URLs, copyright line, visual-identity settings and a news-modal configuration.'
-      properties:
-        acf:
-          type: object
-          description: 'The field group. Observed keys on 2026-08-26: blog_modal_post, company_logo, contact_information, export_settings, footer_contact, footer_copyright, link_to_news_page, modal_show_on_load, social_instagram, social_linkedin, social_twitter, social_youtube, visual_identity.'
-          additionalProperties: true
-  responses:
-    NotFound:
-      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'

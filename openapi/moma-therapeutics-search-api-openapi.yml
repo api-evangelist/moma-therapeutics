@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: MOMA Therapeutics Search API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind momatx.com.
-  description: The site-wide search surface of momatx.com. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  description: The site-wide search surface of momatx.com.
   contact:
     name: MOMA Therapeutics
     url: https://momatx.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://momatx.com/wp-json
   description: Production WordPress REST content API
 tags:
-- name: search
+- name: Search
   description: Cross-content search over every published object — posts, pages and team records.
 paths:
   /wp/v2/search:
     get:
       tags:
-      - search
+      - Search
       operationId: search
       summary: Search published content
       description: Searches across published objects and returns lightweight hits (id, title, url, type, subtype). An unfiltered query returned 42 results on 2026-08-26 — the union of the 32 news posts, 9 pages and the searchable subset of `team`. Use `subtype` to restrict to `post`, `page` or `team`.
@@ -120,7 +120,35 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 components:
+  responses:
+    BadRequest:
+      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    SearchResult:
+      type: object
+      description: A cross-content search hit.
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+          description: Search result object type, e.g. `post`.
+        subtype:
+          type: string
+          description: The underlying post type, e.g. `post`, `page`, `team`.
+        _links:
+          type: object
+          description: HAL-style `_links` relations WordPress emits for the object.
+          additionalProperties: true
     Error:
       type: object
       description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
@@ -147,31 +175,3 @@ components:
               type: array
               items:
                 type: string
-    SearchResult:
-      type: object
-      description: A cross-content search hit.
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        url:
-          type: string
-          format: uri
-        type:
-          type: string
-          description: Search result object type, e.g. `post`.
-        subtype:
-          type: string
-          description: The underlying post type, e.g. `post`, `page`, `team`.
-        _links:
-          type: object
-          description: HAL-style `_links` relations WordPress emits for the object.
-          additionalProperties: true
-  responses:
-    BadRequest:
-      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'

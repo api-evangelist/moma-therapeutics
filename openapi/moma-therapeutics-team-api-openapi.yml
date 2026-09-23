@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: MOMA Therapeutics Team API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind momatx.com.
-  description: The people surface of MOMA Therapeutics, exposed as a custom post type. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  description: The people surface of MOMA Therapeutics, exposed as a custom post type.
   contact:
     name: MOMA Therapeutics
     url: https://momatx.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://momatx.com/wp-json
   description: Production WordPress REST content API
 tags:
-- name: team
+- name: Team
   description: The `team` custom post type — leadership, board, scientific advisory board and founders (59 published at harvest time).
 paths:
   /wp/v2/team:
     get:
       tags:
-      - team
+      - Team
       operationId: listTeamMembers
       summary: List team members
       description: 'Lists published `team` records — 59 at harvest time. This is a MOMA-specific custom post type, not WordPress core: each record carries `acf.member_title` (the person''s role) and `team_types` term IDs classifying them as Founders, leadership or advisors. Filterable by `team_types`.'
@@ -218,7 +218,7 @@ paths:
   /wp/v2/team/{id}:
     get:
       tags:
-      - team
+      - Team
       operationId: getTeamMember
       summary: Get a team member
       description: Retrieves a single `team` record by numeric ID, including biography `content`, `acf.member_title` and the `team_types` classification.
@@ -259,33 +259,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
-          examples:
-          - rest_no_route
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-            params:
-              type: array
-              items:
-                type: string
     TeamMember:
       type: object
       description: A `team` custom-post-type record — a member of MOMA Therapeutics' leadership, board, scientific advisory board or founding team.
@@ -299,7 +286,7 @@ components:
         date_gmt:
           type: string
           format: date-time
-        guid: &id001
+        guid:
           type: object
           properties:
             rendered:
@@ -321,15 +308,25 @@ components:
         link:
           type: string
           format: uri
-        title: *id001
-        content: &id002
+        title:
+          type: object
+          properties:
+            rendered:
+              type: string
+        content:
           type: object
           properties:
             rendered:
               type: string
             protected:
               type: boolean
-        excerpt: *id002
+        excerpt:
+          type: object
+          properties:
+            rendered:
+              type: string
+            protected:
+              type: boolean
         featured_media:
           type: integer
         template:
@@ -374,16 +371,29 @@ components:
           type: object
           description: Structured Yoast SEO metadata.
           additionalProperties: true
-  responses:
-    BadRequest:
-      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
+          examples:
+          - rest_no_route
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: array
+              items:
+                type: string

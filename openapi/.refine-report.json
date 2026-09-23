@@ -1,0 +1,36 @@
+{
+  "provider": "moma-therapeutics",
+  "sources": [
+    "moma-therapeutics-comments-api-openapi.yml",
+    "moma-therapeutics-discovery-api-openapi.yml",
+    "moma-therapeutics-media-api-openapi.yml",
+    "moma-therapeutics-o-embed-api-openapi.yml",
+    "moma-therapeutics-options-api-openapi.yml",
+    "moma-therapeutics-pages-api-openapi.yml",
+    "moma-therapeutics-posts-api-openapi.yml",
+    "moma-therapeutics-search-api-openapi.yml",
+    "moma-therapeutics-taxonomy-api-openapi.yml",
+    "moma-therapeutics-team-api-openapi.yml"
+  ],
+  "outputs": [
+    "moma-therapeutics-comments-api-openapi.yml",
+    "moma-therapeutics-discovery-api-openapi.yml",
+    "moma-therapeutics-media-api-openapi.yml",
+    "moma-therapeutics-o-embed-api-openapi.yml",
+    "moma-therapeutics-options-api-openapi.yml",
+    "moma-therapeutics-pages-api-openapi.yml",
+    "moma-therapeutics-posts-api-openapi.yml",
+    "moma-therapeutics-search-api-openapi.yml",
+    "moma-therapeutics-taxonomy-api-openapi.yml",
+    "moma-therapeutics-team-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "no openapi/_original/ archive: this run re-split PREVIOUSLY REFINED output, so any base URL it carries is inherited from an earlier pass rather than read from a document the provider published"
+  ],
+  "notes": [
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

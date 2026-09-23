@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: MOMA Therapeutics Taxonomy API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind momatx.com.
-  description: The classification vocabulary behind momatx.com content. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  description: The classification vocabulary behind momatx.com content.
   contact:
     name: MOMA Therapeutics
     url: https://momatx.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://momatx.com/wp-json
   description: Production WordPress REST content API
 tags:
-- name: taxonomy
+- name: Taxonomy
   description: 'Term collections for the three registered taxonomies: `category` (4 terms), `post_tag` (registered but empty) and the MOMA-specific `team_types` (3 terms).'
 paths:
   /wp/v2/categories:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listCategories
       summary: List news categories
       description: Lists `category` terms. Four are registered on this deployment, including Blog and Press Release, which segment the news archive.
@@ -145,7 +145,7 @@ paths:
   /wp/v2/categories/{id}:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: getCategory
       summary: Get a news category
       description: Retrieves a single category term by numeric ID.
@@ -178,7 +178,7 @@ paths:
   /wp/v2/tags:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listTags
       summary: List post tags
       description: Lists `post_tag` terms. The taxonomy is registered and anonymously reachable but empty — `X-WP-Total` was 0 on 2026-08-26.
@@ -304,7 +304,7 @@ paths:
   /wp/v2/tags/{id}:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: getTag
       summary: Get a post tag
       description: Retrieves a single `post_tag` term by numeric ID.
@@ -337,7 +337,7 @@ paths:
   /wp/v2/team_types:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listTeamTypes
       summary: List team types
       description: Lists `team_types` terms — the MOMA-specific taxonomy that classifies `team` records. Three terms are registered, including Founders.
@@ -463,7 +463,7 @@ paths:
   /wp/v2/team_types/{id}:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: getTeamType
       summary: Get a team type
       description: Retrieves a single `team_types` term by numeric ID.
@@ -494,33 +494,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
-          examples:
-          - rest_no_route
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-            params:
-              type: array
-              items:
-                type: string
     Term:
       type: object
       description: A taxonomy term (`category`, `post_tag` or `team_types`).
@@ -562,16 +549,29 @@ components:
           type: object
           description: HAL-style `_links` relations WordPress emits for the object.
           additionalProperties: true
-  responses:
-    BadRequest:
-      description: Invalid parameter. WordPress returns `rest_invalid_param` / `rest_missing_callback_param`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
+          examples:
+          - rest_no_route
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: array
+              items:
+                type: string

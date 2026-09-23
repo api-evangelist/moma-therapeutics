@@ -1,9 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: MOMA Therapeutics oEmbed API
+  title: MOMA Therapeutics Oembed o Embed API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind momatx.com.
-  description: The oEmbed provider surface of momatx.com. MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company building precision medicines against molecular machines — highly dynamic proteins that convert chemical energy into regulatory work such as protein transport and degradation — using its proprietary KNOMATIC platform. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress REST route index MOMA Therapeutics publishes at https://momatx.com/wp-json/, restricted to the operations verified to return data anonymously on 2026-08-26.
+  description: The oEmbed provider surface of momatx.com.
   contact:
     name: MOMA Therapeutics
     url: https://momatx.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://momatx.com/wp-json
   description: Production WordPress REST content API
 tags:
-- name: oembed
+- name: o Embed
   description: oEmbed 1.0 provider endpoint for momatx.com URLs.
 paths:
   /oembed/1.0/embed:
     get:
       tags:
-      - oembed
+      - o Embed
       operationId: getOEmbed
       summary: Get an oEmbed response for a momatx.com URL
       description: Returns an oEmbed 1.0 `rich` response for any published momatx.com URL — title, description, provider identity, an embeddable `html` blockquote and thumbnail dimensions. Verified live on 2026-08-26 against https://momatx.com/science/.
@@ -52,32 +52,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
-          examples:
-          - rest_no_route
-        message:
-          type: string
-          description: Human-readable message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-            params:
-              type: array
-              items:
-                type: string
     OEmbed:
       type: object
       description: An oEmbed 1.0 rich response for a momatx.com URL.
@@ -120,6 +94,32 @@ components:
           type: integer
         thumbnail_height:
           type: integer
+    Error:
+      type: object
+      description: The WordPress REST error envelope. It is NOT RFC 9457 `application/problem+json`; it is a bespoke JSON object served as `application/json`.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error slug, e.g. `rest_post_invalid_id`.
+          examples:
+          - rest_no_route
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: array
+              items:
+                type: string
   responses:
     NotFound:
       description: No such object or no matching route (`rest_post_invalid_id`, `rest_no_route`).
