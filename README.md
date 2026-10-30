@@ -64,57 +64,105 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company founded in 2020 that builds
-precision medicines against **molecular machines** — the highly dynamic proteins that convert chemical
-energy stored in cells into regulatory work such as protein transport, DNA repair and degradation, and
-whose constant conformational shape-shifting has historically made them undruggable. Its proprietary
-**KNOMATIC** platform pairs structural and functional-genomics target validation with high-throughput
-fragment and DNA-encoded-library screening, CRISPR gene editing, AI for detecting dynamic conformational
-patterns, and machine-learning lead optimisation.
+MOMA Therapeutics is a Cambridge, Massachusetts drug-discovery company founded in 2020 that builds precision medicines against molecular machines — the highly dynamic proteins that convert chemical energy stored in cells into regulatory work such as protein transport, DNA repair and degradation, and whose constant conformational shape-shifting has historically made them undruggable. Its proprietary KNOMATIC platform combines advanced structural frameworks and functional-genomics target validation with high-throughput fragment and DNA-encoded-library screening, CRISPR gene editing, artificial intelligence for detecting dynamic conformational patterns, and machine-learning lead optimisation, all built against a continually expanding structure-function knowledge base. The company launched in April 2020 with an $86 million Series A led by Third Rock Ventures, added a $150 million Series B in May 2022, and has taken two wholly owned oncology assets into the clinic: MOMA-313, a selective inhibitor of the polymerase theta (Polθ) helicase domain for homologous- recombination-deficient tumours, which entered Phase 1 in August 2024; and MOMA-341, a potent and selective WRN helicase inhibitor for microsatellite-unstable and TA-repeat-expanded tumours, which dosed its first Phase 1 patient in July 2025. It also runs a five-year discovery collaboration with Roche announced in January 2024, an oncology collaboration and licence agreement with Bayer signed in October 2024, and an exclusive licence for a selective PARP1 inhibitor announced in January 2025. MOMA Therapeutics runs no developer program and publishes no product API, developer portal, API reference or machine-readable specification. The only machine-readable surface reachable without credentials is the WordPress REST content API behind momatx.com, catalogued here.
 
-The company launched in April 2020 with an $86M Series A led by Third Rock Ventures, added a $150M
-Series B in May 2022, and has two wholly owned oncology assets in the clinic — **MOMA-313**, a selective
-polymerase theta (Polθ) helicase inhibitor that entered Phase 1 in August 2024, and **MOMA-341**, a WRN
-helicase inhibitor that dosed its first Phase 1 patient in July 2025. It runs a five-year discovery
-collaboration with Roche (January 2024) and a collaboration and licence agreement with Bayer (October 2024).
+**Areas:** Company · Biotechnology · Pharmaceuticals · Drug Discovery · Oncology · Precision Medicine · Life Sciences · Structural Biology · Machine Learning · content-api
 
-- Website: https://momatx.com/
-- Science: https://momatx.com/science/ · Pipeline: https://momatx.com/pipeline/ · Team: https://momatx.com/team/
-- News & Publications: https://momatx.com/news-feed/
+## MOMA Therapeutics on APIs.io
 
-## API surface
+Everything profiled for MOMA Therapeutics is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/moma-therapeutics/](https://apis.io/providers/moma-therapeutics/)** — or go straight to one of the APIs or properties below.
 
-**MOMA Therapeutics runs no developer program.** There is no product API, no developer portal, no API
-reference, no SDK in any registry, no CLI, no sandbox, no pricing, no webhooks, no GraphQL, no gRPC or
-WSDL, no MCP server, no A2A agent card and no `/.well-known/` surface of any kind. Every one of those was
-probed on 2026-08-26 and the absences are recorded in the artifacts rather than merely assumed.
+### APIs (1)
 
-What *is* published, and what this profile catalogues, is the **read-only WordPress REST content API**
-behind `momatx.com` — a real, anonymously reachable, machine-readable surface the company serves at
-`https://momatx.com/wp-json/`. Its 219-route index across 12 namespaces is the only machine-readable
-contract MOMA Therapeutics publishes, and every OpenAPI document in `openapi/` is an API Evangelist
-derivation of it, verified against live anonymous responses.
+- [MOMA Therapeutics Website (WordPress REST)](https://apis.io/apis/moma-therapeutics/momatx-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the MOMA Therapeutics website at momatx.com: the route index of the site's content management system, catalogued…
 
-Two things distinguish it from a stock WordPress install:
+### Published properties
 
-- a first-class **`team` custom post type** carrying 59 people — leadership, board, scientific advisory
-  board and founders — classified by a MOMA-specific `team_types` taxonomy, and
-- an **Advanced Custom Fields** layer carrying the fields the company actually curates: a news item's
-  source, external link and PDF link; a page's builder modules; a person's title.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-| Collection | Count at harvest |
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [moma-therapeutics](https://apis.io/servers/moma-therapeutics/moma-therapeutics/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Moma Therapeutics Authentication](https://apis.io/security/moma-therapeutics/moma-therapeutics-authentication/)
+- [Moma Therapeutics Domain Security](https://apis.io/security/moma-therapeutics/moma-therapeutics-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Moma Therapeutics Plans Pricing](https://apis.io/plans/moma-therapeutics/moma-therapeutics-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Moma Therapeutics Rate Limits](https://apis.io/rate-limits/moma-therapeutics/moma-therapeutics-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://momatx.com/)
+- [Blog](https://momatx.com/posts/category/blog/)
+- [Terms of service](https://momatx.com/terms/)
+- [Privacy policy](https://momatx.com/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 18.3** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| News posts (`/wp/v2/posts`) | 32 |
-| Team records (`/wp/v2/team`) | 59 |
-| Media attachments (`/wp/v2/media`) | 211 |
-| Corporate pages (`/wp/v2/pages`) | 9 |
-| Search results, unfiltered (`/wp/v2/search`) | 42 |
-| Categories / team_types / tags / comments | 4 / 3 / 0 / 0 |
+| Discoverability | 58.0 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 25.6 |
+| Access clarity | 21.1 |
 
-Administrative routes — `/wp/v2/users`, `/wp/v2/settings`, `/wp/v2/menu-items`, `/wp/v2/plugins`,
-`/wp/v2/themes` and the whole `wp-abilities/v1` namespace — answer HTTP 401 anonymously and are
-deliberately excluded, as is every write operation. Nothing in this repository was obtained with
-credentials.
+**Agent readiness 8.8** — agent-aware
 
-Start with [`llms/moma-therapeutics-llms.txt`](llms/moma-therapeutics-llms.txt) for the agent-facing
-summary, or [`skills/`](skills/) for three packaged workflows over the surface.
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 18.4** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/moma-therapeutics/](https://apis.io/providers/moma-therapeutics/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for MOMA Therapeutics: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/moma-therapeutics/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
